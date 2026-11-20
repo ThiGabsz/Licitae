@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Licitaê | Mostruário de licitações</title>
+  <meta name="theme-color" content="#E8590C">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    :root{--orange:#E8590C;--orange-dark:#c94808;--peach:#FFB27A;--brown:#3B1500;--cream:#FFF6EC;--paper:#fff;--ink:#28190f;--muted:#887c72;--line:#efe8e1;--bg:#faf8f5;--green:#18794e;--shadow:0 12px 34px rgba(59,21,0,.07);--radius:18px}
+    *{box-sizing:border-box}
+    html{min-width:320px;scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:"DM Sans",Arial,sans-serif;font-size:14px;line-height:1.5}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid rgba(232,89,12,.22);outline-offset:2px}
+    .app-shell{min-height:100vh}
+    .auth-screen{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(145deg,#fff6ec,#fff 60%,#ffe5d2)}
+    .auth-card{width:min(520px,100%);padding:clamp(22px,5vw,38px);border:1px solid var(--line);border-radius:24px;background:#fff;box-shadow:0 24px 70px rgba(59,21,0,.12)}
+    .auth-brand{justify-content:center;margin-bottom:22px}
+    .auth-heading{text-align:center;margin-bottom:22px}
+    .auth-heading h1{font-size:27px}
+    .auth-heading p{margin:0;color:var(--muted)}
+    .auth-form{display:grid;gap:13px}
+    .auth-form[hidden]{display:none}
+    .password-rules{padding:11px 13px;border-radius:11px;background:var(--cream);color:#71543e;font-size:11px}
+    .auth-switch{margin:16px 0 0;text-align:center;color:var(--muted);font-size:12px}
+    .auth-switch button{border:0;background:none;color:var(--orange);font-weight:800;text-decoration:underline}
+    .auth-message{min-height:20px;margin:12px 0 0;color:#b42318;font-size:12px;text-align:center}
+    .auth-note{margin:16px 0 0;color:#93877d;font-size:10px;text-align:center}
+    .logout-btn{white-space:nowrap}
+    .topbar{min-height:76px;padding:0 clamp(18px,4vw,56px);display:flex;align-items:center;justify-content:space-between;gap:22px;background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+    .brand{display:inline-flex;align-items:center;gap:10px;color:var(--brown);text-decoration:none;flex-shrink:0}
+    .brand-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:13px;background:var(--orange);color:white;font-size:21px;font-weight:800;box-shadow:0 5px 12px rgba(232,89,12,.22)}
+    .brand-name{font-family:Pacifico,cursive;font-size:25px;line-height:1;letter-spacing:.1px}
+    .brand-caption{display:block;margin-top:5px;color:var(--muted);font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
+    .topnav{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:7px}
+    .nav-btn{border:0;background:transparent;color:#73665c;padding:10px 15px;border-radius:12px;font-weight:700;transition:.18s ease}
+    .nav-btn:hover{background:var(--cream);color:var(--brown)}
+    .nav-btn.active{color:var(--orange);background:#fff0e5}
+    .profile-chip{border:1px solid var(--line);background:white;border-radius:30px;padding:6px 12px 6px 6px;display:flex;align-items:center;gap:9px;color:var(--brown);font-weight:700;max-width:190px}
+    .avatar{width:32px;height:32px;display:grid;place-items:center;border-radius:50%;background:var(--cream);color:var(--orange);font-weight:800;flex-shrink:0}
+    .profile-chip span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .main{width:min(1200px,calc(100% - 40px));margin:0 auto;padding:35px 0 72px}
+    .page-header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:25px}
+    .eyebrow{color:var(--orange);font-size:11px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;margin-bottom:8px}
+    h1,h2,h3,p{margin-top:0}
+    h1{margin-bottom:6px;color:var(--brown);font-size:clamp(26px,4vw,35px);line-height:1.15;letter-spacing:-.9px}
+    .page-subtitle{margin:0;color:var(--muted);font-size:14px}
+    .toolbar,.filter-tabs{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+    .btn{min-height:42px;padding:10px 15px;border:1px solid transparent;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-weight:700;transition:.18s ease}
+    .btn-primary{background:var(--orange);color:#fff;box-shadow:0 5px 14px rgba(232,89,12,.16)}
+    .btn-primary:hover{background:var(--orange-dark);transform:translateY(-1px)}
+    .btn-secondary{background:white;color:var(--brown);border-color:var(--line)}
+    .btn-secondary:hover{background:var(--cream);border-color:#f3cfb6}
+    .btn-soft{background:#fff0e5;color:var(--orange)}
+    .btn-soft:hover{background:#ffe4d1}
+    .btn-danger{background:#fff2f0;color:#b42318;border-color:#f7d7d3}
+    .btn-small{min-height:35px;padding:7px 11px;font-size:12px;border-radius:10px}
+    .search-wrap{position:relative;margin-bottom:19px}
+    .search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#9b8c81;font-size:19px;pointer-events:none}
+    .search-input{width:100%;min-height:52px;padding:12px 16px 12px 46px;border:1px solid var(--line);border-radius:15px;color:var(--ink);background:#fff;box-shadow:0 3px 10px rgba(59,21,0,.025)}
+    .search-input::placeholder{color:#a99e95}
+    .summary-row{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:14px 2px 17px;color:var(--muted);font-size:12px}
+    .source-note{background:#fff7ed;border:1px solid #f8dfc9;border-radius:14px;padding:12px 15px;margin:0 0 18px;display:flex;align-items:flex-start;gap:10px;color:#77513a;font-size:12px}
+    .source-note strong{color:var(--brown)}
+    .source-note .note-icon{color:var(--orange);font-size:17px;line-height:1.2}
+    .tender-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+    .tender-card{position:relative;display:flex;flex-direction:column;min-height:174px;padding:20px;border:1px solid var(--line);border-radius:var(--radius);background:white;box-shadow:0 4px 15px rgba(59,21,0,.025);transition:.2s ease}
+    .tender-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:#f2d0ba}
+    .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .card-title{margin:0 0 9px;color:var(--brown);font-size:16px;font-weight:800;line-height:1.38;overflow-wrap:anywhere}
+    .card-org{margin:0;color:#776a60;font-size:12px;line-height:1.45;overflow-wrap:anywhere}
+    .heart-btn{width:36px;height:36px;flex:0 0 36px;border:1px solid var(--line);border-radius:12px;background:#fff;color:#9c8c80;font-size:19px;line-height:1;transition:.15s ease;position:relative;z-index:2}
+    .heart-btn:hover{color:var(--orange);border-color:#f4c6a6;background:#fff8f3}
+    .heart-btn.is-favorite{color:var(--orange);background:#fff0e5;border-color:#ffddc6}
+    .card-footer{margin-top:auto;padding-top:18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .card-location{color:#82766d;font-size:12px}
+    .card-value-label{display:block;color:#9a8f86;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+    .card-value{display:block;color:var(--orange);font-size:16px;font-weight:800;white-space:nowrap}
+    .empty-state{grid-column:1/-1;padding:46px 20px;text-align:center;background:white;border:1px dashed #e8d8cb;border-radius:var(--radius);color:var(--muted)}
+    .empty-icon{font-size:32px;margin-bottom:10px}
+    .empty-state h3{margin-bottom:5px;color:var(--brown);font-size:17px}
+    .empty-state p{margin:0 auto;max-width:430px;font-size:13px}
+    .filter-tabs{gap:8px;margin:0 0 19px}
+    .filter-tab{border:1px solid var(--line);background:white;color:#76695f;border-radius:11px;padding:9px 14px;font-weight:700;font-size:12px;transition:.18s ease}
+    .filter-tab:hover{border-color:#f0c9ae;color:var(--brown)}
+    .filter-tab.active{background:var(--brown);border-color:var(--brown);color:white}
+    .filter-tab .count{display:inline-grid;place-items:center;margin-left:5px;min-width:18px;height:18px;padding:0 5px;border-radius:20px;background:rgba(255,255,255,.16);font-size:10px}
+    .profile-layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(260px,.7fr);gap:18px}
+    .panel{background:white;border:1px solid var(--line);border-radius:var(--radius);padding:23px;box-shadow:0 4px 15px rgba(59,21,0,.025)}
+    .panel h2{margin:0 0 5px;color:var(--brown);font-size:18px}
+    .panel-description{margin:0 0 19px;color:var(--muted);font-size:12px}
+    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .field{display:flex;flex-direction:column;gap:6px;min-width:0}
+    .field.full{grid-column:1/-1}
+    .field label{color:#55463c;font-size:12px;font-weight:700}
+    .field input,.field textarea,.field select{width:100%;min-height:42px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;color:var(--ink);background:#fff}
+    .field textarea{min-height:90px;resize:vertical}
+    .field input::placeholder,.field textarea::placeholder{color:#b2a89f}
+    .save-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .saved-indicator{min-height:18px;color:var(--green);font-size:12px}
+    .setting-list{display:grid;gap:0}
+    .setting-item{padding:14px 0;border-bottom:1px solid #f3eee9;display:flex;align-items:center;justify-content:space-between;gap:15px}
+    .setting-item:last-child{border-bottom:0}
+    .setting-item strong{display:block;color:var(--brown);font-size:13px}
+    .setting-item small{display:block;margin-top:3px;color:var(--muted);font-size:11px}
+    .toggle{appearance:none;width:42px;height:24px;border-radius:20px;background:#d7d0ca;position:relative;flex:0 0 42px;transition:.2s;cursor:pointer}
+    .toggle::after{content:"";width:18px;height:18px;position:absolute;top:3px;left:3px;border-radius:50%;background:white;box-shadow:0 1px 3px rgba(0,0,0,.15);transition:.2s}
+    .toggle:checked{background:var(--orange)}
+    .toggle:checked::after{left:21px}
+    .panel-spacer{margin-top:18px}
+    .status-pill{display:inline-flex;align-items:center;width:fit-content;gap:6px;background:#f7f2ec;color:#6b594b;border-radius:20px;padding:5px 9px;font-size:11px;font-weight:700}
+    .modal-backdrop{display:none;position:fixed;inset:0;z-index:50;padding:20px;background:rgba(37,23,13,.47);align-items:center;justify-content:center}
+    .modal-backdrop.open{display:flex}
+    .modal{width:min(640px,100%);max-height:min(88vh,820px);overflow:auto;border-radius:21px;background:white;box-shadow:0 24px 70px rgba(30,17,8,.24)}
+    .modal-header{position:sticky;top:0;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:22px 24px 17px;background:white;border-bottom:1px solid var(--line)}
+    .modal-header h2{margin:0;color:var(--brown);font-size:20px;line-height:1.35}
+    .modal-close{width:34px;height:34px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#716359;font-size:20px;flex-shrink:0}
+    .modal-content{padding:20px 24px 24px}
+    .detail-description{padding:14px;border-radius:13px;background:var(--cream);color:#5e493a;font-size:13px;white-space:pre-line}
+    .detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:15px 0}
+    .detail-cell{padding:12px;border:1px solid var(--line);border-radius:12px;min-width:0}
+    .detail-cell span{display:block;color:#96877c;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px}
+    .detail-cell strong{display:block;margin-top:4px;color:var(--brown);font-size:13px;overflow-wrap:anywhere}
+    .detail-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:17px}
+    .note-area{margin-top:18px}
+    .note-area label{display:block;margin-bottom:6px;color:#55463c;font-size:12px;font-weight:700}
+    .note-area textarea{width:100%;min-height:74px;resize:vertical;padding:10px 12px;border:1px solid var(--line);border-radius:11px}
+    .modal-footnote{margin:15px 0 0;color:var(--muted);font-size:11px}
+    .toast{position:fixed;right:20px;bottom:20px;z-index:90;max-width:min(420px,calc(100vw - 40px));padding:13px 16px;border-radius:13px;background:var(--brown);color:white;box-shadow:var(--shadow);opacity:0;transform:translateY(12px);pointer-events:none;transition:.22s ease;font-size:13px}
+    .toast.show{opacity:1;transform:translateY(0)}
+    .file-input{display:none}
+    .admin-only[hidden]{display:none!important}
+    .import-help{color:var(--muted);font-size:11px;margin:0}
+    .footer{padding:20px;text-align:center;color:#a69b92;font-size:11px}
+    .admin-panel{margin:0 0 18px}
+    .admin-panel[hidden]{display:none}
+    .admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .admin-results{display:grid;gap:8px;margin-top:10px}
+    .admin-result{width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:11px;padding:11px 12px;color:var(--brown)}
+    .admin-result:hover{border-color:#f0c9ae;background:#fffaf6}
+    .admin-result strong,.admin-result small{display:block;overflow-wrap:anywhere}
+    .admin-result small{margin-top:3px;color:var(--muted);font-size:11px}
+    .admin-selected{margin-top:14px;padding:12px;border:1px solid #f3cfb6;background:#fff8f3;border-radius:12px}
+    .admin-selected strong{color:var(--brown)}
+    .admin-assigned{display:grid;gap:8px;margin-top:10px}
+    .admin-assigned-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px;border:1px solid var(--line);border-radius:11px;background:#fff}
+    .admin-assigned-row span{font-size:12px;color:var(--brown);overflow-wrap:anywhere}
+    .muted-small{color:var(--muted);font-size:11px}
+    @media(max-width:760px){.topbar{min-height:70px;padding:12px 18px;flex-wrap:wrap;gap:10px}.topnav{order:3;width:100%;justify-content:flex-start;overflow:visible}.nav-btn{padding:8px 11px;font-size:12px}.profile-chip{margin-left:auto}.main{width:min(100% - 28px,650px);padding-top:25px}.page-header{align-items:flex-start;flex-direction:column}.tender-grid,.admin-grid{grid-template-columns:1fr}.profile-layout{grid-template-columns:1fr}}
+    @media(max-width:430px){.brand-name{font-size:22px}.brand-mark{width:34px;height:34px}.profile-chip{max-width:135px;font-size:12px}.form-grid,.detail-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.panel{padding:18px}.modal-backdrop{padding:10px}.modal-header,.modal-content{padding-left:17px;padding-right:17px}.card-value{font-size:15px}.card-footer{align-items:flex-end}.summary-row{align-items:flex-start;flex-direction:column}.admin-assigned-row{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+  <section class="auth-screen" id="authScreen">
+    <div class="auth-card">
+      <a class="brand auth-brand" href="#" aria-label="Licitaê">
+        <span class="brand-mark" aria-hidden="true">L</span>
+        <span><span class="brand-name">Licitaê</span><span class="brand-caption">Oportunidades públicas</span></span>
+      </a>
+      <div class="auth-heading">
+        <h1 id="authHeading">Entre para acompanhar suas licitações</h1>
+        <p id="authDescription">Acesse com o CNPJ cadastrado e sua senha.</p>
+      </div>
+      <form class="auth-form" id="loginForm">
+        <div class="field"><label for="loginCnpj">CNPJ</label><input id="loginCnpj" name="cnpj" inputmode="numeric" autocomplete="username" placeholder="00.000.000/0000-00" required></div>
+        <div class="field"><label for="loginPassword">Senha</label><input id="loginPassword" name="password" type="password" autocomplete="current-password" required></div>
+        <button class="btn btn-primary" type="submit">Entrar</button>
+        <p class="auth-switch">Ainda não tem cadastro? <button type="button" data-auth-mode="register">Criar conta</button></p>
+      </form>
+      <form class="auth-form" id="registerForm" hidden>
+        <div class="field"><label for="registerName">Nome do usuário</label><input id="registerName" name="name" autocomplete="name" required></div>
+        <div class="field"><label for="registerEmail">E-mail</label><input id="registerEmail" name="email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="registerCompany">Razão social</label><input id="registerCompany" name="company" required></div>
+        <div class="field"><label for="registerCnpj">CNPJ</label><input id="registerCnpj" name="cnpj" inputmode="numeric" autocomplete="organization" placeholder="00.000.000/0000-00" maxlength="18" required></div>
+        <div class="field"><label for="registerPhone">Telefone</label><input id="registerPhone" name="phone" type="tel" autocomplete="tel" inputmode="numeric" placeholder="(00) 00000-0000" maxlength="15" required></div>
+        <div class="field"><label for="registerCity">Cidade/UF</label><input id="registerCity" name="city" list="citySuggestions" placeholder="Digite uma cidade, ex.: Curitiba" autocomplete="off" required></div>
+        <datalist id="citySuggestions">
+          <option value="Curitiba/PR"></option><option value="Londrina/PR"></option><option value="Maringá/PR"></option><option value="Ponta Grossa/PR"></option><option value="Cascavel/PR"></option><option value="São José dos Pinhais/PR"></option><option value="Foz do Iguaçu/PR"></option><option value="Colombo/PR"></option><option value="Guarapuava/PR"></option><option value="Paranaguá/PR"></option><option value="Apucarana/PR"></option><option value="Toledo/PR"></option><option value="Pinhais/PR"></option><option value="Araucária/PR"></option><option value="Campo Largo/PR"></option><option value="Joinville/SC"></option><option value="Florianópolis/SC"></option><option value="Porto Alegre/RS"></option><option value="São Paulo/SP"></option><option value="Rio de Janeiro/RJ"></option><option value="Belo Horizonte/MG"></option><option value="Brasília/DF"></option>
+        </datalist>
+        <div class="field"><label for="registerPassword">Senha</label><input id="registerPassword" name="password" type="password" autocomplete="new-password" required></div>
+        <div class="field"><label for="registerPasswordConfirm">Confirmar senha</label><input id="registerPasswordConfirm" name="passwordConfirm" type="password" autocomplete="new-password" required></div>
+        <div class="password-rules">A senha deve ter no mínimo 10 caracteres, uma letra maiúscula, uma minúscula, um número e um caractere especial.</div>
+        <button class="btn btn-primary" type="submit">Criar conta</button>
+        <p class="auth-switch">Já tem cadastro? <button type="button" data-auth-mode="login">Voltar ao login</button></p>
+      </form>
+      <p class="auth-message" id="authMessage" role="alert"></p>
+      <p class="auth-note">Os dados desta versão ficam neste navegador. Não use uma senha que você utiliza em outros serviços.</p>
+    </div>
+  </section>
+  <div class="app-shell" id="appShell" hidden>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Licitaê, página inicial" data-page-link="inicio">
+        <span class="brand-mark" aria-hidden="true">L</span>
+        <span><span class="brand-name">Licitaê</span><span class="brand-caption">Oportunidades públicas</span></span>
+      </a>
+      <nav class="topnav" aria-label="Navegação principal">
+        <button class="nav-btn active" type="button" data-page="inicio">Início</button>
+        <button class="nav-btn" type="button" data-page="solicitacoes">Minhas solicitações</button>
+        <button class="nav-btn" type="button" data-page="perfil">Perfil</button>
+      </nav>
+      <div class="toolbar">
+        <button class="profile-chip" type="button" data-page="perfil" aria-label="Abrir perfil">
+          <span class="avatar" id="avatarInitial">T</span><span id="chipName">Meu perfil</span>
+        </button>
+        <button class="btn btn-secondary btn-small logout-btn" type="button" id="logoutBtn">Sair</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <section id="page-inicio">
+        <div class="page-header">
+          <div>
+            <div class="eyebrow">Oportunidades para sua empresa</div>
+            <h1>Encontre sua próxima licitação</h1>
+            <p class="page-subtitle">Pesquise e acompanhe oportunidades públicas em um só lugar.</p>
+          </div>
+          <div class="toolbar">
+            <input id="zipInput" class="file-input" type="file" accept=".zip,.csv,text/csv">
+            <button class="btn btn-secondary admin-only" type="button" id="importBtn" hidden><span aria-hidden="true">↥</span> Importar ZIP ou CSV</button>
+          </div>
+        </div>
+        <div class="source-note" id="sourceNote">
+          <span class="note-icon" aria-hidden="true">ⓘ</span>
+          <span><strong>Base inicial parcial:</strong> os registros visíveis no ZIP carregado nesta conversa foram incluídos. Importe o ZIP completo para preencher o mostruário com toda a base.</span>
+        </div>
+        <div class="search-wrap">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input id="searchInput" class="search-input" type="search" placeholder="Buscar por objetivo, órgão ou cidade..." autocomplete="off">
+        </div>
+        <div class="summary-row">
+          <span id="tenderCount">Carregando licitações…</span>
+          <span>Os cartões mostram objetivo, órgão, cidade/UF e valor previsto.</span>
+        </div>
+        <div class="tender-grid" id="tenderGrid" aria-live="polite"></div>
+      </section>
+
+      <section id="page-solicitacoes" hidden>
+        <div class="page-header">
+          <div>
+            <div class="eyebrow">Acompanhe seu andamento</div>
+            <h1>Minhas solicitações</h1>
+            <p class="page-subtitle">Licitações que você está analisando, aguardando, concorrendo ou já adquiriu.</p>
+          </div>
+        </div>
+        <div class="filter-tabs" id="requestFilters">
+          <button class="filter-tab active" data-filter="todas" type="button">Todas <span class="count" data-count="todas">0</span></button>
+          <button class="filter-tab" data-filter="leilao" type="button">Em leilão <span class="count" data-count="leilao">0</span></button>
+          <button class="filter-tab" data-filter="adquiridas" type="button">Adquiridas <span class="count" data-count="adquiridas">0</span></button>
+          <button class="filter-tab" data-filter="favoritas" type="button">Favoritas <span class="count" data-count="favoritas">0</span></button>
+        </div>
+
+        <div class="panel admin-panel" id="adminAcquiredPanel" hidden>
+          <h2>Gerenciar licitações adquiridas</h2>
+          <p class="panel-description">Busque um usuário pelo nome ou CNPJ e atribua uma licitação à lista “Adquiridas” dele.</p>
+          <div class="admin-grid">
+            <div>
+              <div class="field">
+                <label for="adminUserSearch">Buscar usuário por nome ou CNPJ</label>
+                <input id="adminUserSearch" type="search" placeholder="Digite o nome ou CNPJ" autocomplete="off">
+              </div>
+              <div class="admin-results" id="adminUserResults"></div>
+              <form id="manualUserForm" class="panel-spacer">
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="manualUserName">Nome do usuário</label>
+                    <input id="manualUserName" required placeholder="Nome completo ou empresa">
+                  </div>
+                  <div class="field">
+                    <label for="manualUserCnpj">CNPJ</label>
+                    <input id="manualUserCnpj" inputmode="numeric" placeholder="00.000.000/0000-00">
+                  </div>
+                </div>
+                <div class="save-row">
+                  <span class="muted-small">Se não encontrar, cadastre-o nesta lista local.</span>
+                  <button class="btn btn-secondary btn-small" type="submit">Cadastrar usuário</button>
+                </div>
+              </form>
+            </div>
+            <div>
+              <div id="adminSelectedUser" class="muted-small">Selecione um usuário para ver ou atribuir licitações.</div>
+              <div id="adminTenderTools" hidden>
+                <div class="field" style="margin-top:12px">
+                  <label for="adminTenderSearch">Buscar licitação para adicionar</label>
+                  <input id="adminTenderSearch" type="search" placeholder="Digite objetivo, órgão ou processo" autocomplete="off">
+                </div>
+                <div class="admin-results" id="adminTenderResults"></div>
+                <div class="admin-assigned" id="adminAssignedList"></div>
+              </div>
+            </div>
+          </div>
+          <p class="import-help" style="margin-top:14px">Os usuários e as atribuições são guardados neste navegador. Para disponibilizar essas alterações entre contas e dispositivos, o site precisa de autenticação e banco de dados compartilhado.</p>
+        </div>
+
+        <div class="search-wrap">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input id="requestSearch" class="search-input" type="search" placeholder="Buscar nas minhas solicitações..." autocomplete="off">
+        </div>
+        <div class="summary-row">
+          <span id="requestCount"></span>
+          <span>Abra uma licitação para alterar sua situação ou adicionar uma anotação.</span>
+        </div>
+        <div class="tender-grid" id="requestGrid" aria-live="polite"></div>
+      </section>
+
+      <section id="page-perfil" hidden>
+        <div class="page-header">
+          <div>
+            <div class="eyebrow">Seus dados e preferências</div>
+            <h1>Perfil</h1>
+            <p class="page-subtitle">Cadastre os dados da empresa e configure seus alertas.</p>
+          </div>
+        </div>
+        <div class="profile-layout">
+          <form class="panel" id="profileForm">
+            <h2>Dados do usuário e da empresa</h2>
+            <p class="panel-description">As informações ficam salvas neste navegador.</p>
+            <div class="form-grid">
+              <div class="field full">
+                <label for="profileRole">Tipo de acesso</label>
+                <select id="profileRole" name="role" disabled>
+                  <option value="usuario">Usuário</option>
+                  <option value="admin">Administrador</option>
+                </select>
+                <small class="import-help">O acesso de administrador é definido pelo servidor: quem tem acesso marca os administradores em Perfil › Controle de acesso, e o CNPJ listado em ADMIN_CNPJ sempre é administrador.</small>
+              </div>
+              <div class="field"><label for="profileName">Nome do usuário</label><input id="profileName" name="name" autocomplete="name" placeholder="Seu nome"></div>
+              <div class="field"><label for="profileEmail">E-mail</label><input id="profileEmail" name="email" type="email" autocomplete="email" placeholder="voce@empresa.com.br"></div>
+              <div class="field"><label for="companyName">Razão social</label><input id="companyName" name="company" placeholder="Nome da empresa"></div>
+              <div class="field"><label for="companyCnpj">CNPJ</label><input id="companyCnpj" name="cnpj" inputmode="numeric" placeholder="00.000.000/0000-00" maxlength="18"></div>
+              <div class="field"><label for="profilePhone">Telefone</label><input id="profilePhone" name="phone" type="tel" autocomplete="tel" inputmode="numeric" placeholder="(00) 00000-0000" maxlength="15"></div>
+              <div class="field"><label for="profileCity">Cidade/UF</label><input id="profileCity" name="city" list="citySuggestions" placeholder="Cidade/UF" autocomplete="off"></div>
+              <div class="field full"><label for="profileFilters">Meus filtros de interesse</label><input id="profileFilters" name="filters" placeholder="Ex.: materiais de escritório, limpeza, Paraná"></div>
+            </div>
+            <div class="save-row"><span class="saved-indicator" id="profileSaved"></span><button class="btn btn-primary" type="submit">Salvar perfil</button></div>
+          </form>
+          <div>
+            <div class="panel">
+              <h2>Alertas</h2>
+              <p class="panel-description">Preferências guardadas neste navegador.</p>
+              <div class="setting-list">
+                <label class="setting-item"><span><strong>Aviso antes da abertura</strong><small>Mostrar preferência de aviso de prazo.</small></span><input class="toggle" type="checkbox" id="alertOpening"></label>
+                <label class="setting-item"><span><strong>Novas licitações dos filtros</strong><small>Usar seus termos de interesse.</small></span><input class="toggle" type="checkbox" id="alertMatches"></label>
+              </div>
+              <div class="save-row"><span class="saved-indicator" id="alertsSaved"></span><button class="btn btn-secondary btn-small" type="button" id="saveAlerts">Salvar alertas</button></div>
+            </div>
+            <div class="panel panel-spacer">
+              <h2>Minha base</h2>
+              <p class="panel-description">Os registros importados ficam guardados neste navegador.</p>
+              <div class="setting-item"><span><strong id="databaseCount">0 licitações</strong><small>Inclui os dados importados e os registros iniciais.</small></span></div>
+              <button class="btn btn-secondary btn-small" id="clearExamples" type="button">Limpar exemplos iniciais</button>
+              <p class="import-help" style="margin-top:12px">Este botão remove apenas os seis registros iniciais. Licitações importadas permanecem na base.</p>
+            </div>
+            <div class="panel panel-spacer" id="accessPanel" hidden>
+              <h2>Controle de acesso</h2>
+              <p class="panel-description">Marque quem é administrador. Só administradores importam a base e alteram este controle.</p>
+              <div class="admin-assigned" id="userAccessList"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div class="footer">Licitaê · Encontre, acompanhe e participe de licitações.</div>
+  </div>
+
+  <div class="modal-backdrop" id="detailBackdrop" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+    <div class="modal">
+      <div class="modal-header"><h2 id="detailTitle">Detalhe da licitação</h2><button class="modal-close" id="closeModal" type="button" aria-label="Fechar">×</button></div>
+      <div class="modal-content" id="detailContent"></div>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    "use strict";
+
+    const INITIAL_TENDERS = [
+      {id:"demo-167-2026",process:"167/2026",modality:"Concorrência Eletrônica (Lei Federal 14.133/2021)",status:"Publicado",objective:"Contratação de empresa para execução dos projetos arquitetônicos, complementares e orçamento da Nova Reitoria da Universidade Estadual de Londrina.",agency:"UEL · Universidade Estadual de Londrina",city:"Londrina/PR",value:599394.40,opening:"2026-12-04",protocol:"266105479",judgment:"Menor Preço"},
+      {id:"demo-201-2026",process:"201/2026",modality:"Concorrência Eletrônica (Lei Federal 14.133/2021)",status:"Publicado",objective:"Contratação de empresa especializada em obras de engenharia e/ou arquitetura para ampliação e reforma do Colégio Estadual Nilo Brandão, situado no município de Curitiba, Paraná.",agency:"FUNDEPAR · Instituto Paranaense de Desenvolvimento Educacional",city:"Curitiba/PR",value:8787558.44,opening:"2026-12-03",protocol:"220774430",judgment:"Menor Preço"},
+      {id:"demo-206-2026",process:"206/2026",modality:"Concorrência Eletrônica (Lei Federal 14.133/2021)",status:"Publicado",objective:"Reforma das Salas B103, B104 e Corredores.",agency:"UNIOESTE · Campus Cascavel",city:"Cascavel/PR",value:454894.99,opening:"2026-11-19",protocol:"262385582",judgment:"Maior Desconto"},
+      {id:"demo-207-2026",process:"207/2026",modality:"Concorrência Eletrônica (Lei Federal 14.133/2021)",status:"Publicado",objective:"Reforma do Laboratório de Ensino de Matemática (LEM) e salas anexo.",agency:"UNIOESTE · Campus Cascavel",city:"Cascavel/PR",value:167750.00,opening:"2026-11-19",protocol:"234879839",judgment:"Maior Desconto"},
+      {id:"demo-83-2026",process:"83/2026",modality:"Concorrência Eletrônica (Lei Federal 14.133/2021)",status:"Publicado",objective:"Contratação de empresa especializada para execução da obra de infraestrutura viária do Complexo Viário de Acesso ao Terminal de Ônibus do município de Pinhais, na Região Metropolitana de Curitiba.",agency:"AMEP · Agência de Assuntos Metropolitanos do Paraná",city:"Pinhais/PR",value:177958395.64,opening:"2026-12-16",protocol:"258256395",judgment:"Maior Desconto"},
+      {id:"demo-137-2026",process:"137/2026",modality:"Concorrência Eletrônica (Lei Federal 14.133/2021)",status:"Publicado",objective:"Contratação integrada para construção do Complexo Avançado de Pesquisa Clínica e Odontologia Digital da UEPG, em Ponta Grossa.",agency:"UEPG · Universidade Estadual de Ponta Grossa",city:"Ponta Grossa/PR",value:4374793.47,opening:"2026-12-01",protocol:"261310171",judgment:"Técnica e Preço"}
+    ];
+
+    const STORAGE_KEYS={requests:"licitae_requests_v1",profile:"licitae_profile_v1",alerts:"licitae_alerts_v1",users:"licitae_users_v1",acquired:"licitae_acquired_assignments_v1",session:"licitae_session_v1"};
+    let apiToken=safeRead(STORAGE_KEYS.session,{}).token||"";
+    async function api(path,options={}){
+      const headers={"Content-Type":"application/json"};
+      if(apiToken)headers.Authorization="Bearer "+apiToken;
+      const response=await fetch(path,{method:options.method||"GET",headers,body:options.body?JSON.stringify(options.body):undefined});
+      const data=await response.json().catch(()=>({}));
+      if(!response.ok)throw new Error(data.error||"Erro de comunicação com o servidor.");
+      return data
+    }
+    function roleForCnpj(cnpj){return safeRead(STORAGE_KEYS.session,{}).role||"usuario"}
+    let tenders=[];
+    let activeRequestFilter="todas";
+    let currentTenderId=null;
+    let db=null;
+    let toastTimer=null;
+    let selectedAdminUserKey="";
+
+    function safeRead(key,fallback){
+      try{const value=localStorage.getItem(key);return value?JSON.parse(value):fallback}catch(error){return fallback}
+    }
+    function safeWrite(key,value){
+      try{localStorage.setItem(key,JSON.stringify(value));return true}catch(error){showToast("Não foi possível salvar no armazenamento local deste navegador.");return false}
+    }
+    function openDatabase(){
+      return new Promise((resolve,reject)=>{
+        if(!("indexedDB" in window)){resolve(null);return}
+        const request=indexedDB.open("LicitaeLocalDB",2);
+        request.onupgradeneeded=()=>{const database=request.result;if(!database.objectStoreNames.contains("tenders"))database.createObjectStore("tenders",{keyPath:"id"});if(!database.objectStoreNames.contains("users"))database.createObjectStore("users",{keyPath:"cnpj"})};
+        request.onsuccess=()=>resolve(request.result);
+        request.onerror=()=>reject(request.error)
+      })
+    }
+    function loadStoredTenders(database){
+      return new Promise((resolve,reject)=>{
+        if(!database){resolve(null);return}
+        const transaction=database.transaction("tenders","readonly");
+        const request=transaction.objectStore("tenders").getAll();
+        request.onsuccess=()=>resolve(request.result||[]);
+        request.onerror=()=>reject(request.error)
+      })
+    }
+    function writeTenders(database,rows){
+      return new Promise((resolve,reject)=>{
+        if(!database){resolve(false);return}
+        const transaction=database.transaction("tenders","readwrite");
+        const store=transaction.objectStore("tenders");
+        store.clear();
+        for(const row of rows)store.put(row);
+        transaction.oncomplete=()=>resolve(true);
+        transaction.onerror=()=>reject(transaction.error);
+        transaction.onabort=()=>reject(transaction.error)
+      })
+    }
+    function databaseUser(cnpj){
+      return new Promise((resolve,reject)=>{
+        if(!db){reject(new Error("O banco local não está disponível neste navegador."));return}
+        const request=db.transaction("users","readonly").objectStore("users").get(cnpj);
+        request.onsuccess=()=>resolve(request.result||null);
+        request.onerror=()=>reject(request.error)
+      })
+    }
+    function saveDatabaseUser(user){
+      return new Promise((resolve,reject)=>{
+        if(!db){reject(new Error("O banco local não está disponível neste navegador."));return}
+        const transaction=db.transaction("users","readwrite");
+        transaction.objectStore("users").put(user);
+        transaction.oncomplete=()=>resolve(true);
+        transaction.onerror=()=>reject(transaction.error);
+        transaction.onabort=()=>reject(transaction.error)
+      })
+    }
+    function allDatabaseUsers(){
+      return new Promise((resolve,reject)=>{
+        if(!db){resolve([]);return}
+        const request=db.transaction("users","readonly").objectStore("users").getAll();
+        request.onsuccess=()=>resolve(request.result||[]);
+        request.onerror=()=>reject(request.error)
+      })
+    }
+    function cleanCnpj(value){return String(value||"").replace(/\D/g,"")}
+    function formatCnpj(value){
+      const digits=String(value||"").replace(/\D/g,"").slice(0,14);
+      let formatted=digits.slice(0,2);
+      if(digits.length>2)formatted+="."+digits.slice(2,5);
+      if(digits.length>5)formatted+="."+digits.slice(5,8);
+      if(digits.length>8)formatted+="/"+digits.slice(8,12);
+      if(digits.length>12)formatted+="-"+digits.slice(12,14);
+      return formatted
+    }
+    function formatPhone(value){
+      const digits=String(value||"").replace(/\D/g,"").slice(0,11);
+      if(!digits)return "";
+      if(digits.length<=2)return "("+digits;
+      const area=digits.slice(0,2);
+      const number=digits.slice(2);
+      const split=digits.length>10?5:4;
+      return `(${area}) ${number.length>split?number.slice(0,split)+"-"+number.slice(split):number}`
+    }
+    function applyMask(input,formatter){
+      input.addEventListener("input",()=>{
+        const caret=input.selectionStart??input.value.length;
+        const digitsBefore=input.value.slice(0,caret).replace(/\D/g,"").length;
+        input.value=formatter(input.value);
+        let nextCaret=0,seen=0;
+        while(nextCaret<input.value.length&&seen<digitsBefore){
+          if(/\d/.test(input.value[nextCaret]))seen++;
+          nextCaret++
+        }
+        input.setSelectionRange(nextCaret,nextCaret)
+      })
+    }
+    function passwordIsStrong(value){return value.length>=10&&/[A-Z]/.test(value)&&/[a-z]/.test(value)&&/[0-9]/.test(value)&&/[^A-Za-z0-9\s]/.test(value)}
+    async function hashPassword(password,salt){
+      if(!window.crypto?.subtle)throw new Error("A proteção de senha exige abrir o site em uma conexão segura (HTTPS ou localhost).");
+      const bytes=new TextEncoder().encode(`${salt}:${password}`);
+      const digest=await crypto.subtle.digest("SHA-256",bytes);
+      return Array.from(new Uint8Array(digest),byte=>byte.toString(16).padStart(2,"0")).join("")
+    }
+    function authMode(mode){
+      const registering=mode==="register";
+      document.getElementById("loginForm").hidden=registering;
+      document.getElementById("registerForm").hidden=!registering;
+      document.getElementById("authHeading").textContent=registering?"Crie sua conta Licitaê":"Entre para acompanhar suas licitações";
+      document.getElementById("authDescription").textContent=registering?"Preencha os dados para cadastrar seu acesso.":"Acesse com o CNPJ cadastrado e sua senha.";
+      document.getElementById("authMessage").textContent=""
+    }
+    async function activateAccount(user){
+      user.role=roleForCnpj(user.cnpj);
+      const profile={name:user.name,email:user.email,company:user.company,cnpj:user.cnpj,phone:user.phone,city:user.city,filters:user.filters||"",role:user.role};
+      safeWrite(STORAGE_KEYS.profile,profile);
+      safeWrite(STORAGE_KEYS.session,{cnpj:user.cnpj,role:user.role});
+      upsertDirectoryUser(profile);
+      updateProfileChip();
+      document.getElementById("authScreen").hidden=true;
+      document.getElementById("appShell").hidden=false;
+      loadProfile();
+      updateImportAccess();
+      renderAll()
+    }
+    async function registerAccount(event){
+      event.preventDefault();
+      const message=document.getElementById("authMessage");
+      const form=new FormData(event.currentTarget);
+      const user={
+        name:String(form.get("name")||"").trim(),
+        email:String(form.get("email")||"").trim(),
+        company:String(form.get("company")||"").trim(),
+        cnpj:cleanCnpj(form.get("cnpj")),
+        phone:String(form.get("phone")||"").trim(),
+        city:String(form.get("city")||"").trim(),
+        filters:"",
+        role:"usuario"
+      };
+      const password=String(form.get("password")||"");
+      const confirmation=String(form.get("passwordConfirm")||"");
+      if(!user.name||!user.email||!user.company||!user.phone||!user.city){message.textContent="Preencha todos os campos do cadastro.";return}
+      if(user.cnpj.length!==14){message.textContent="Informe um CNPJ com 14 números.";return}
+      if(!passwordIsStrong(password)){message.textContent="A senha precisa cumprir todos os requisitos indicados.";return}
+      if(password!==confirmation){message.textContent="As senhas não coincidem.";return}
+      try{
+        if(await databaseUser(user.cnpj)){message.textContent="Já existe uma conta cadastrada com esse CNPJ.";return}
+        user.role="usuario";
+        const salt=crypto.getRandomValues(new Uint8Array(16));
+        user.salt=Array.from(salt,byte=>byte.toString(16).padStart(2,"0")).join("");
+        user.passwordHash=await hashPassword(password,user.salt);
+        user.createdAt=new Date().toISOString();
+        await saveDatabaseUser(user);
+        event.currentTarget.reset();
+        await activateAccount(user);
+        showToast(user.role==="admin"?"Conta criada com acesso de administrador neste navegador.":"Conta criada com sucesso.")
+      }catch(error){message.textContent=error.message||"Não foi possível criar a conta."}
+    }
+    async function loginAccount(event){
+      event.preventDefault();
+      const message=document.getElementById("authMessage");
+      const cnpj=cleanCnpj(document.getElementById("loginCnpj").value);
+      const password=document.getElementById("loginPassword").value;
+      if(cnpj.length!==14){message.textContent="Informe o CNPJ com 14 números.";return}
+      try{
+        const user=await databaseUser(cnpj);
+        if(!user||await hashPassword(password,user.salt)!==user.passwordHash){message.textContent="CNPJ ou senha incorretos.";return}
+        user.role=roleForCnpj(user.cnpj);
+        event.currentTarget.reset();
+        await activateAccount(user);
+        showToast("Login realizado.")
+      }catch(error){message.textContent=error.message||"Não foi possível entrar."}
+    }
+    async function activateSession(user,token){
+      apiToken=token;
+      safeWrite(STORAGE_KEYS.session,{token,cnpj:user.cnpj,role:user.role});
+      const profile={name:user.name,email:user.email,company:user.company,cnpj:user.cnpj,phone:user.phone,city:user.city,filters:user.filters||"",role:user.role};
+      safeWrite(STORAGE_KEYS.profile,profile);
+      upsertDirectoryUser(profile);
+      updateProfileChip();
+      document.getElementById("authScreen").hidden=true;
+      document.getElementById("appShell").hidden=false;
+      loadProfile();
+      updateImportAccess();
+      await refreshTenders();
+      renderAll()
+    }
+    async function refreshTenders(){
+      try{
+        const data=await api("/api/tenders");
+        if(Array.isArray(data.tenders)&&data.tenders.length){
+          tenders=data.tenders;
+          document.getElementById("sourceNote").innerHTML=`<span class="note-icon" aria-hidden="true">✓</span><span><strong>Base do servidor:</strong> ${tenders.length.toLocaleString("pt-BR")} licitações carregadas.</span>`
+        }
+      }catch(error){}
+    }
+    async function renderAccessPanel(){
+      const panel=document.getElementById("accessPanel");
+      if(!panel)return;
+      panel.hidden=!isAdmin();
+      if(!isAdmin())return;
+      const list=document.getElementById("userAccessList");
+      try{
+        const data=await api("/api/users");
+        const me=safeRead(STORAGE_KEYS.session,{}).cnpj;
+        list.innerHTML=data.users.map(user=>`<div class="admin-assigned-row"><span><strong>${escapeHTML(user.name||"Usuário")}</strong><br><small>${escapeHTML(user.company||"")} · ${escapeHTML(user.cnpj)}</small></span><label class="muted-small" style="display:flex;align-items:center;gap:6px;white-space:nowrap"><input type="checkbox" data-action="toggle-admin" data-cnpj="${escapeHTML(user.cnpj)}" ${user.role==="admin"?"checked":""} ${user.cnpj===me?"disabled":""}> Administrador</label></div>`).join("")||`<p class="muted-small">Nenhum usuário cadastrado.</p>`
+      }catch(error){list.innerHTML=`<p class="muted-small">${escapeHTML(error.message)}</p>`}
+    }
+    document.getElementById("userAccessList").addEventListener("change",async event=>{
+      const box=event.target;
+      if(box.dataset.action!=="toggle-admin")return;
+      try{
+        await api(`/api/users/${box.dataset.cnpj}/role`,{method:"PUT",body:{role:box.checked?"admin":"usuario"}});
+        showToast(box.checked?"Acesso de administrador concedido.":"Acesso de administrador removido.")
+      }catch(error){box.checked=!box.checked;showToast(error.message)}
+      renderAccessPanel()
+    });
+    async function registerAccountApi(event){
+      event.preventDefault();
+      const message=document.getElementById("authMessage");
+      const form=new FormData(event.currentTarget);
+      const body={
+        name:String(form.get("name")||"").trim(),
+        email:String(form.get("email")||"").trim(),
+        company:String(form.get("company")||"").trim(),
+        cnpj:cleanCnpj(form.get("cnpj")),
+        phone:String(form.get("phone")||"").trim(),
+        city:String(form.get("city")||"").trim(),
+        password:String(form.get("password")||""),
+        passwordConfirm:String(form.get("passwordConfirm")||"")
+      };
+      try{
+        const data=await api("/api/register",{method:"POST",body});
+        event.currentTarget.reset();
+        await activateSession(data.user,data.token);
+        showToast("Conta criada com sucesso.")
+      }catch(error){message.textContent=error.message||"Não foi possível criar a conta."}
+    }
+    async function loginAccountApi(event){
+      event.preventDefault();
+      const message=document.getElementById("authMessage");
+      try{
+        const data=await api("/api/login",{method:"POST",body:{cnpj:cleanCnpj(document.getElementById("loginCnpj").value),password:document.getElementById("loginPassword").value}});
+        event.currentTarget.reset();
+        await activateSession(data.user,data.token);
+        showToast("Login realizado.")
+      }catch(error){message.textContent=error.message||"Não foi possível entrar."}
+    }
+    function signOut(){
+      try{localStorage.removeItem(STORAGE_KEYS.session);localStorage.removeItem(STORAGE_KEYS.profile)}catch(error){}
+      document.getElementById("appShell").hidden=true;
+      document.getElementById("authScreen").hidden=false;
+      document.getElementById("loginForm").reset();
+      document.getElementById("authMessage").textContent="";
+      authMode("login")
+    }
+    function showToast(message){
+      const toast=document.getElementById("toast");
+      toast.textContent=message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer=setTimeout(()=>toast.classList.remove("show"),3100)
+    }
+    function escapeHTML(value){
+      return String(value??"").replace(/[&<>"']/g,character=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[character]))
+    }
+    function normalize(value){
+      return String(value??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim()
+    }
+    function money(value){
+      if(value===null||value===undefined||value===""||!Number.isFinite(Number(value))||Number(value)<=0)return "Não informado";
+      return Number(value).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})
+    }
+    function dateBR(value){
+      if(!value)return "Não informada";
+      const parts=String(value).slice(0,10).split("-");
+      if(parts.length!==3)return String(value);
+      return `${parts[2]}/${parts[1]}/${parts[0]}`
+    }
+    function isAdmin(){return safeRead(STORAGE_KEYS.session,{}).role==="admin"}
+    function updateImportAccess(){
+      const importButton=document.getElementById("importBtn");
+      if(importButton)importButton.hidden=!isAdmin();
+      renderAccessPanel()
+    }
+    function getRequests(){return safeRead(STORAGE_KEYS.requests,{})}
+    function getUsers(){return safeRead(STORAGE_KEYS.users,[])}
+    function getAssignments(){return safeRead(STORAGE_KEYS.acquired,{})}
+    function saveRequests(requests){safeWrite(STORAGE_KEYS.requests,requests);renderAll()}
+    function profileUserKey(profile){
+      if(!profile)return "";
+      const cnpj=String(profile.cnpj||"").replace(/\D/g,"");
+      if(cnpj)return `cnpj:${cnpj}`;
+      const email=normalize(profile.email||"");
+      if(email)return `email:${email}`;
+      const name=normalize(profile.name||profile.company||"");
+      return name?`nome:${name}`:""
+    }
+    function isFavorite(tender){return getRequests()[tender.id]?.status==="favorita"}
+    function upsertDirectoryUser(user){
+      const key=profileUserKey(user);
+      if(!key)return;
+      const users=getUsers();
+      const index=users.findIndex(item=>item.key===key);
+      const entry={key,name:String(user.name||user.company||"Usuário").trim(),company:String(user.company||"").trim(),cnpj:String(user.cnpj||"").trim(),email:String(user.email||"").trim()};
+      if(index>=0)users[index]={...users[index],...entry};else users.push(entry);
+      safeWrite(STORAGE_KEYS.users,users)
+    }
+    function setPage(page){
+      document.querySelectorAll(".main > section").forEach(section=>section.hidden=section.id!==`page-${page}`);
+      document.querySelectorAll("[data-page]").forEach(button=>button.classList.toggle("active",button.dataset.page===page));
+      if(page==="solicitacoes")renderRequests();
+      if(page==="perfil")loadProfile();
+      window.scrollTo({top:0,behavior:"smooth"})
+    }
+    function tenderMatches(tender,query){
+      if(!query)return true;
+      const haystack=normalize([tender.objective,tender.agency,tender.city,tender.process,tender.modality,tender.status,tender.protocol].join(" "));
+      return haystack.includes(normalize(query))
+    }
+    function makeCard(tender){
+      const favorite=isFavorite(tender);
+      return `<article class="tender-card">
+        <div class="card-top"><div><h2 class="card-title">${escapeHTML(tender.objective||"Objetivo não informado")}</h2><p class="card-org">${escapeHTML(tender.agency||"Órgão não informado")}</p></div>
+        <button class="heart-btn ${favorite?"is-favorite":""}" type="button" data-action="toggle-favorite" data-id="${escapeHTML(tender.id)}" aria-label="${favorite?"Remover dos favoritos":"Adicionar aos favoritos"}" title="${favorite?"Remover dos favoritos":"Adicionar aos favoritos"}">${favorite?"♥":"♡"}</button></div>
+        <div class="card-footer"><span class="card-location">${escapeHTML(tender.city||"Cidade/UF não informada")}</span><span><span class="card-value-label">Valor previsto</span><span class="card-value">${escapeHTML(money(tender.value))}</span></span></div>
+        <button class="card-open" type="button" data-action="open-detail" data-id="${escapeHTML(tender.id)}" aria-label="Abrir detalhes de ${escapeHTML(tender.process||"licitação")}" style="position:absolute;inset:0;border:0;background:transparent;opacity:0;cursor:pointer;z-index:1"></button>
+      </article>`
+    }
+    function renderHome(){
+      const query=document.getElementById("searchInput").value;
+      const filtered=tenders.filter(tender=>tenderMatches(tender,query));
+      document.getElementById("tenderCount").textContent=`${filtered.length} ${filtered.length===1?"licitação encontrada":"licitações encontradas"}`;
+      const grid=document.getElementById("tenderGrid");
+      grid.innerHTML=filtered.length?filtered.map(makeCard).join(""):`<div class="empty-state"><div class="empty-icon">⌕</div><h3>Nenhuma licitação encontrada</h3><p>Tente outro termo de busca ou importe o ZIP completo da base.</p></div>`;
+      updateDatabaseCount()
+    }
+    function getMyAcquiredIds(userKey){
+      const assignments=getAssignments();
+      const assigned=Array.isArray(assignments[userKey])?assignments[userKey]:[];
+      const legacy=Object.entries(getRequests()).filter(([,request])=>request.status==="adquirida").map(([id])=>id);
+      return [...new Set([...assigned,...legacy])]
+    }
+    function requestsForFilter(){
+      const requests=getRequests();
+      if(activeRequestFilter==="adquiridas"){
+        let userKey=profileUserKey(safeRead(STORAGE_KEYS.profile,{}));
+        if(isAdmin()&&selectedAdminUserKey)userKey=selectedAdminUserKey;
+        const ids=new Set(getMyAcquiredIds(userKey));
+        return tenders.filter(tender=>ids.has(tender.id))
+      }
+      return tenders.filter(tender=>{
+        const request=requests[tender.id];
+        if(!request||!request.status)return false;
+        if(activeRequestFilter==="leilao")return request.status==="leilao";
+        if(activeRequestFilter==="favoritas")return request.status==="favorita";
+        return request.status!=="adquirida"
+      })
+    }
+    function renderAdminAcquired(){
+      const panel=document.getElementById("adminAcquiredPanel");
+      const show=isAdmin()&&activeRequestFilter==="adquiridas";
+      panel.hidden=!show;
+      if(!show)return;
+      const search=normalize(document.getElementById("adminUserSearch").value);
+      const users=getUsers().filter(user=>!search||normalize([user.name,user.company,user.cnpj,user.email].join(" ")).includes(search));
+      const results=document.getElementById("adminUserResults");
+      results.innerHTML=users.length?users.map(user=>`<button type="button" class="admin-result" data-action="select-admin-user" data-key="${escapeHTML(user.key)}"><strong>${escapeHTML(user.name||user.company||"Usuário")}</strong><small>${escapeHTML(user.cnpj||user.email||"Sem CNPJ ou e-mail")}</small></button>`).join(""):`<p class="muted-small">${search?"Nenhum usuário encontrado na lista local.":"Nenhum usuário cadastrado na lista local."}</p>`;
+      const selected=getUsers().find(user=>user.key===selectedAdminUserKey);
+      const selectedBox=document.getElementById("adminSelectedUser");
+      const tools=document.getElementById("adminTenderTools");
+      if(!selected){
+        selectedBox.textContent="Selecione um usuário para ver ou atribuir licitações.";
+        tools.hidden=true;
+        document.getElementById("adminAssignedList").innerHTML="";
+        document.getElementById("adminTenderResults").innerHTML="";
+        return
+      }
+      selectedBox.innerHTML=`<div class="admin-selected"><strong>Usuário selecionado:</strong> ${escapeHTML(selected.name||selected.company||"Usuário")}<br><span class="muted-small">${escapeHTML(selected.cnpj||selected.email||"Identificador não informado")}</span></div>`;
+      tools.hidden=false;
+      const tenderQuery=document.getElementById("adminTenderSearch").value;
+      const assignedIds=new Set(getMyAcquiredIds(selected.key));
+      const tenderResults=tenders.filter(tender=>!assignedIds.has(tender.id)&&tenderMatches(tender,tenderQuery)).slice(0,12);
+      document.getElementById("adminTenderResults").innerHTML=tenderResults.length?tenderResults.map(tender=>`<button type="button" class="admin-result" data-action="assign-acquired" data-id="${escapeHTML(tender.id)}"><strong>${escapeHTML(tender.objective||"Objetivo não informado")}</strong><small>${escapeHTML(tender.process||"Processo não informado")} · ${escapeHTML(tender.agency||"Órgão não informado")} · ${escapeHTML(money(tender.value))} &nbsp; + Adicionar</small></button>`).join(""):`<p class="muted-small">${tenderQuery?"Nenhuma licitação disponível corresponde à busca.":"Não há licitações disponíveis para adicionar."}</p>`;
+      const assigned=tenders.filter(tender=>assignedIds.has(tender.id));
+      document.getElementById("adminAssignedList").innerHTML=assigned.length?`<strong class="muted-small">Licitações adquiridas atribuídas (${assigned.length})</strong>`+assigned.map(tender=>`<div class="admin-assigned-row"><span>${escapeHTML(tender.objective||"Objetivo não informado")}<br><small>${escapeHTML(tender.process||"")}</small></span><button class="btn btn-danger btn-small" type="button" data-action="remove-acquired" data-id="${escapeHTML(tender.id)}">Remover</button></div>`).join(""):`<p class="muted-small">Este usuário ainda não tem licitações adquiridas atribuídas.</p>`
+    }
+    function renderRequests(){
+      const requests=getRequests();
+      const requestTenders=tenders.filter(tender=>requests[tender.id]?.status&&requests[tender.id].status!=="adquirida");
+      const userKey=profileUserKey(safeRead(STORAGE_KEYS.profile,{}));
+      const myAcquired=getMyAcquiredIds(isAdmin()&&selectedAdminUserKey?selectedAdminUserKey:userKey);
+      document.querySelector('[data-count="todas"]').textContent=requestTenders.length+myAcquired.filter(id=>tenders.some(t=>t.id===id)).length;
+      document.querySelector('[data-count="leilao"]').textContent=requestTenders.filter(tender=>requests[tender.id]?.status==="leilao").length;
+      document.querySelector('[data-count="adquiridas"]').textContent=tenders.filter(tender=>myAcquired.includes(tender.id)).length;
+      document.querySelector('[data-count="favoritas"]').textContent=requestTenders.filter(tender=>requests[tender.id]?.status==="favorita").length;
+      renderAdminAcquired();
+      const query=document.getElementById("requestSearch").value;
+      const filtered=requestsForFilter().filter(tender=>tenderMatches(tender,query));
+      document.getElementById("requestCount").textContent=`${filtered.length} ${filtered.length===1?"solicitação":"solicitações"}`;
+      const grid=document.getElementById("requestGrid");
+      if(!filtered.length){
+        let emptyText;
+        if(activeRequestFilter==="adquiridas"&&isAdmin()&&!selectedAdminUserKey)emptyText="Use a busca de administrador acima para selecionar um usuário e atribuir licitações adquiridas.";
+        else if(requestTenders.length||myAcquired.length)emptyText="Não há licitações nesta categoria. Escolha outra aba ou altere a situação de uma licitação.";
+        else emptyText="Sua lista está vazia. No Início, abra uma licitação e marque como favorita, em leilão ou concorrendo.";
+        grid.innerHTML=`<div class="empty-state"><div class="empty-icon">♡</div><h3>Nenhuma solicitação nesta lista</h3><p>${escapeHTML(emptyText)}</p></div>`
+      }else{
+        grid.innerHTML=filtered.map(tender=>{
+          const request=requests[tender.id]||{};
+          const acquired=activeRequestFilter==="adquiridas";
+          const label=acquired?"Adquirida":({favorita:"Favorita",leilao:"Em leilão",concorrendo:"Concorrendo"}[request.status]||"Em acompanhamento");
+          return makeCard(tender).replace('<div class="card-top">',`<div class="card-top"><span class="status-pill">${escapeHTML(label)}</span>`)
+        }).join("")
+      }
+      updateDatabaseCount()
+    }
+    function renderAll(){renderHome();renderRequests();updateDatabaseCount()}
+    function updateDatabaseCount(){
+      const element=document.getElementById("databaseCount");
+      if(element)element.textContent=`${tenders.length.toLocaleString("pt-BR")} ${tenders.length===1?"licitação":"licitações"}`
+    }
+    function openDetail(id){
+      const tender=tenders.find(item=>item.id===id);
+      if(!tender)return;
+      currentTenderId=id;
+      const request=getRequests()[id]||{};
+      document.getElementById("detailTitle").textContent=tender.process?`Licitação ${tender.process}`:"Detalhe da licitação";
+      document.getElementById("detailContent").innerHTML=`
+        <span class="status-pill">${escapeHTML(tender.modality||"Modalidade não informada")}</span>
+        <div class="detail-description" style="margin-top:14px">${escapeHTML(tender.objective||"Objetivo não informado")}</div>
+        <div class="detail-grid">
+          <div class="detail-cell"><span>Órgão contratante</span><strong>${escapeHTML(tender.agency||"Não informado")}</strong></div>
+          <div class="detail-cell"><span>Cidade/UF</span><strong>${escapeHTML(tender.city||"Não informada")}</strong></div>
+          <div class="detail-cell"><span>Valor previsto</span><strong>${escapeHTML(money(tender.value))}</strong></div>
+          <div class="detail-cell"><span>Situação na base</span><strong>${escapeHTML(tender.status||"Não informada")}</strong></div>
+          <div class="detail-cell"><span>Abertura informada</span><strong>${escapeHTML(dateBR(tender.opening))}</strong></div>
+          <div class="detail-cell"><span>Critério de julgamento</span><strong>${escapeHTML(tender.judgment||"Não informado")}</strong></div>
+          <div class="detail-cell"><span>Processo</span><strong>${escapeHTML(tender.process||"Não informado")}</strong></div>
+          <div class="detail-cell"><span>Protocolo</span><strong>${escapeHTML(tender.protocol||"Não informado")}</strong></div>
+        </div>
+        <div class="detail-actions">
+          <button class="btn btn-small ${request.status==="favorita"?"btn-soft":"btn-secondary"}" data-action="set-status" data-status="favorita">♡ Favorita</button>
+          <button class="btn btn-small ${request.status==="leilao"?"btn-soft":"btn-secondary"}" data-action="set-status" data-status="leilao">◷ Em leilão</button>
+          <button class="btn btn-small ${request.status==="concorrendo"?"btn-soft":"btn-secondary"}" data-action="set-status" data-status="concorrendo">＋ Concorrendo</button>
+          ${request.status?`<button class="btn btn-small btn-danger" data-action="remove-status">Remover da lista</button>`:""}
+        </div>
+        <div class="note-area"><label for="tenderNote">Minha anotação</label><textarea id="tenderNote" placeholder="Anote requisitos, documentos ou pontos para conferir...">${escapeHTML(request.note||"")}</textarea><div style="display:flex;justify-content:flex-end;margin-top:8px"><button class="btn btn-secondary btn-small" data-action="save-note">Salvar anotação</button></div></div>
+        <p class="modal-footnote">As datas, valores e demais informações são os que constam na base importada. Confira o edital oficial antes de participar.</p>`;
+      document.getElementById("detailBackdrop").classList.add("open");
+      document.getElementById("closeModal").focus()
+    }
+    function closeDetail(){document.getElementById("detailBackdrop").classList.remove("open");currentTenderId=null}
+    function toggleFavorite(id){
+      const requests=getRequests();
+      const current=requests[id]||{};
+      if(current.status==="favorita"){delete requests[id];showToast("Licitação removida das favoritas.")}
+      else{requests[id]={...current,status:"favorita"};showToast("Licitação adicionada às favoritas.")}
+      saveRequests(requests)
+    }
+    function setTenderStatus(status){
+      if(!currentTenderId)return;
+      const requests=getRequests();
+      const current=requests[currentTenderId]||{};
+      requests[currentTenderId]={...current,status};
+      safeWrite(STORAGE_KEYS.requests,requests);
+      const labels={favorita:"favorita",leilao:"em leilão",concorrendo:"concorrendo"};
+      showToast(`Situação atualizada: ${labels[status]}.`);
+      openDetail(currentTenderId);
+      renderAll()
+    }
+    function removeTenderStatus(){
+      if(!currentTenderId)return;
+      const requests=getRequests();
+      delete requests[currentTenderId];
+      safeWrite(STORAGE_KEYS.requests,requests);
+      showToast("Licitação removida de Minhas solicitações.");
+      closeDetail();
+      renderAll()
+    }
+    function saveTenderNote(){
+      if(!currentTenderId)return;
+      const note=document.getElementById("tenderNote").value.trim();
+      const requests=getRequests();
+      const current=requests[currentTenderId]||{};
+      requests[currentTenderId]={...current,note};
+      safeWrite(STORAGE_KEYS.requests,requests);
+      showToast("Anotação salva.");
+      renderAll()
+    }
+    function assignAcquired(id){
+      if(!isAdmin()||!selectedAdminUserKey)return;
+      const assignments=getAssignments();
+      const list=Array.isArray(assignments[selectedAdminUserKey])?assignments[selectedAdminUserKey]:[];
+      if(!list.includes(id))list.push(id);
+      assignments[selectedAdminUserKey]=list;
+      if(safeWrite(STORAGE_KEYS.acquired,assignments)){
+        showToast("Licitação adicionada à aba Adquiridas do usuário.");
+        renderAll()
+      }
+    }
+    function removeAcquired(id){
+      if(!isAdmin()||!selectedAdminUserKey)return;
+      const assignments=getAssignments();
+      assignments[selectedAdminUserKey]=(assignments[selectedAdminUserKey]||[]).filter(item=>item!==id);
+      safeWrite(STORAGE_KEYS.acquired,assignments);
+      showToast("Licitação removida das adquiridas deste usuário.");
+      renderAll()
+    }
+    function loadProfile(){
+      const profile=safeRead(STORAGE_KEYS.profile,{});
+      document.getElementById("profileName").value=profile.name||"";
+      document.getElementById("profileEmail").value=profile.email||"";
+      document.getElementById("companyName").value=profile.company||"";
+      document.getElementById("companyCnpj").value=profile.cnpj||"";
+      document.getElementById("profilePhone").value=profile.phone||"";
+      document.getElementById("profileCity").value=profile.city||"";
+      document.getElementById("profileFilters").value=profile.filters||"";
+      document.getElementById("profileRole").value=profile.role||"usuario";
+      const alerts=safeRead(STORAGE_KEYS.alerts,{opening:true,matches:true});
+      document.getElementById("alertOpening").checked=alerts.opening!==false;
+      document.getElementById("alertMatches").checked=alerts.matches!==false
+    }
+    function updateProfileChip(){
+      const profile=safeRead(STORAGE_KEYS.profile,{});
+      const name=profile.name?.trim()||profile.company?.trim()||"Meu perfil";
+      document.getElementById("chipName").textContent=name;
+      document.getElementById("avatarInitial").textContent=name==="Meu perfil"?"L":name.charAt(0).toUpperCase()
+    }
+    function profileSubmit(event){
+      event.preventDefault();
+      const profile={
+        name:document.getElementById("profileName").value.trim(),
+        email:document.getElementById("profileEmail").value.trim(),
+        company:document.getElementById("companyName").value.trim(),
+        cnpj:document.getElementById("companyCnpj").value.trim(),
+        phone:document.getElementById("profilePhone").value.trim(),
+        city:document.getElementById("profileCity").value.trim(),
+        filters:document.getElementById("profileFilters").value.trim(),
+        role:safeRead(STORAGE_KEYS.session,{}).role||"usuario"
+      };
+      if(safeWrite(STORAGE_KEYS.profile,profile)){
+        upsertDirectoryUser(profile);
+        const cnpj=cleanCnpj(profile.cnpj);
+        api("/api/profile",{method:"PUT",body:profile}).catch(()=>{});
+        document.getElementById("profileSaved").textContent="Perfil salvo.";
+        updateProfileChip();
+        renderAll();
+        showToast("Perfil salvo neste navegador.");
+        setTimeout(()=>document.getElementById("profileSaved").textContent="",2600)
+      }
+    }
+    function saveAlerts(){
+      const alerts={opening:document.getElementById("alertOpening").checked,matches:document.getElementById("alertMatches").checked};
+      if(safeWrite(STORAGE_KEYS.alerts,alerts)){
+        document.getElementById("alertsSaved").textContent="Preferências salvas.";
+        showToast("Preferências de alertas salvas.");
+        setTimeout(()=>document.getElementById("alertsSaved").textContent="",2600)
+      }
+    }
+    function parseCSV(text){
+      const rows=[];let row=[];let cell="";let quoted=false;
+      for(let i=0;i<text.length;i++){
+        const char=text[i];
+        if(quoted){if(char==='"'){if(text[i+1]==='"'){cell+='"';i++}else quoted=false}else cell+=char}
+        else if(char==='"')quoted=true;
+        else if(char===";"){row.push(cell);cell=""}
+        else if(char==="\n"||char==="\r"){if(char==="\r"&&text[i+1]==="\n")i++;row.push(cell);cell="";if(row.some(value=>value.trim()!==""))rows.push(row);row=[]}
+        else cell+=char
+      }
+      row.push(cell);if(row.some(value=>value.trim()!==""))rows.push(row);
+      if(!rows.length)return [];
+      const headers=rows.shift().map(value=>normalize(value).replace(/[^a-z0-9]/g,""));
+      return rows.map(values=>{const result={};headers.forEach((header,index)=>result[header]=(values[index]||"").trim());return result})
+    }
+    function findValue(row,candidates){
+      for(const key of candidates){const value=row[normalize(key).replace(/[^a-z0-9]/g,"")];if(value!==undefined&&value!=="")return value}
+      return ""
+    }
+    function parseAmount(value){
+      if(!value)return null;
+      let normalized=String(value).trim().replace(/[R$\s]/g,"");
+      if(normalized.includes(",")&&normalized.includes("."))normalized=normalized.replace(/\./g,"").replace(",",".");
+      else if(normalized.includes(","))normalized=normalized.replace(",",".");
+      const result=Number(normalized);
+      return Number.isFinite(result)?result:null
+    }
+    function inferCity(objective,agency,location){
+      const full=`${objective||""} ${agency||""} ${location||""}`;
+      const explicit=[/munic[ií]pio de\s+([^,.;\n]+?)(?=\s*,|\s+Estado|\s+Paran|\s*\/PR|\s+conforme|$)/i,/em\s+([A-ZÀ-Ý][A-Za-zÀ-ÿ .'-]{1,45})\/PR\b/i];
+      for(const pattern of explicit){const match=full.match(pattern);if(match&&match[1]){const city=match[1].replace(/\s+/g," ").trim().replace(/\s+(Estado do Paraná|Paraná)$/i,"");if(city.length>1&&city.length<48)return `${city}/PR`}}
+      const org=normalize(agency);
+      if(org.includes("universidade estadual de londrina")||/\buel\b/.test(org))return "Londrina/PR";
+      if(org.includes("universidade estadual de ponta grossa")||/\buepg\b/.test(org))return "Ponta Grossa/PR";
+      if(org.includes("campus cascavel")||/\bcasc\b/.test(org))return "Cascavel/PR";
+      if(org.includes("universidade estadual de maringa")||/\buem\b/.test(org))return "Maringá/PR";
+      if(org.includes("cidade de curitiba")||/\bcuritiba\b/i.test(full))return "Curitiba/PR";
+      return "Cidade não informada/PR"
+    }
+    function mapRowsToTenders(rows){
+      const result=[];
+      rows.forEach((row,index)=>{
+        const objective=findValue(row,["objeto"]);
+        if(!objective)return;
+        const processNo=findValue(row,["numprocesso"]);
+        const year=findValue(row,["ano"]);
+        const modality=findValue(row,["modalidade"]);
+        const agency=findValue(row,["orgao"]);
+        const local=findValue(row,["localdisputa"]);
+        const protocol=findValue(row,["protocolo"]);
+        const idFromBase=findValue(row,["idlicitacoes"]);
+        const status=findValue(row,["situacao"]);
+        const opening=findValue(row,["dataabertura"]);
+        const judgment=findValue(row,["criteriojulgamento"]);
+        const value=parseAmount(findValue(row,["valor_estimado"]));
+        const identity=idFromBase||`${processNo}-${year}-${index}`;
+        result.push({id:`base-${identity}-${index}`,process:processNo?`${processNo}/${year||"2026"}`:"Processo não informado",modality,status,objective,agency:agency.replace(/^[^;]*?-(?=[A-ZÀ-Ý])/,"").trim()||agency,city:inferCity(objective,agency,local),value,opening,protocol,judgment})
+      });
+      return result
+    }
+    async function readZipCsv(file){
+      const buffer=await file.arrayBuffer();
+      const view=new DataView(buffer);
+      const bytes=new Uint8Array(buffer);
+      const min=Math.max(0,bytes.length-65557);
+      let endOffset=-1;
+      for(let offset=bytes.length-22;offset>=min;offset--){if(view.getUint32(offset,true)===0x06054b50){endOffset=offset;break}}
+      if(endOffset<0)throw new Error("Não foi possível localizar o índice do ZIP.");
+      const entryCount=view.getUint16(endOffset+10,true);
+      let cursor=view.getUint32(endOffset+16,true);
+      let target=null;
+      const decoder=new TextDecoder("utf-8");
+      for(let i=0;i<entryCount;i++){
+        if(view.getUint32(cursor,true)!==0x02014b50)break;
+        const flags=view.getUint16(cursor+8,true);
+        const method=view.getUint16(cursor+10,true);
+        const compressedSize=view.getUint32(cursor+20,true);
+        const nameLength=view.getUint16(cursor+28,true);
+        const extraLength=view.getUint16(cursor+30,true);
+        const commentLength=view.getUint16(cursor+32,true);
+        const localOffset=view.getUint32(cursor+42,true);
+        const filename=decoder.decode(bytes.slice(cursor+46,cursor+46+nameLength));
+        if(/TB_LICITACOES-2026\.csv$/i.test(filename)){target={flags,method,compressedSize,localOffset,filename};break}
+        cursor+=46+nameLength+extraLength+commentLength
+      }
+      if(!target)throw new Error("Não encontrei TB_LICITACOES-2026.csv dentro do ZIP.");
+      if(target.flags&1)throw new Error("O CSV do ZIP está protegido por senha.");
+      if(view.getUint32(target.localOffset,true)!==0x04034b50)throw new Error("O arquivo CSV no ZIP está inválido.");
+      const nameLength=view.getUint16(target.localOffset+26,true);
+      const extraLength=view.getUint16(target.localOffset+28,true);
+      const dataStart=target.localOffset+30+nameLength+extraLength;
+      const compressed=bytes.slice(dataStart,dataStart+target.compressedSize);
+      let resultBytes;
+      if(target.method===0)resultBytes=compressed;
+      else if(target.method===8&&"DecompressionStream"in window){const stream=new Blob([compressed]).stream().pipeThrough(new DecompressionStream("deflate-raw"));resultBytes=new Uint8Array(await new Response(stream).arrayBuffer())}
+      else throw new Error("Este navegador não conseguiu descompactar o método usado no ZIP.");
+      return decoder.decode(resultBytes)
+    }
+    async function importFile(file){
+      if(!file)return;
+      if(!isAdmin()){
+        showToast("A importação de ZIP ou CSV está disponível somente para administradores.");
+        document.getElementById("zipInput").value="";
+        return
+      }
+      try{
+        let csvText;
+        if(/\.csv$/i.test(file.name))csvText=await file.text();
+        else if(/\.zip$/i.test(file.name))csvText=await readZipCsv(file);
+        else throw new Error("Escolha um arquivo ZIP ou CSV.");
+        const imported=mapRowsToTenders(parseCSV(csvText));
+        if(!imported.length)throw new Error("Não encontrei linhas de licitação com objetivo no arquivo.");
+        tenders=imported;
+        if(db)await writeTenders(db,tenders);
+        try{await api("/api/tenders",{method:"PUT",body:{tenders}})}catch(error){showToast("Importado aqui, mas não foi salvo no servidor: "+error.message)}
+        document.getElementById("sourceNote").innerHTML=`<span class="note-icon" aria-hidden="true">✓</span><span><strong>Base importada:</strong> ${imported.length.toLocaleString("pt-BR")} licitações carregadas de ${escapeHTML(file.name)} e guardadas neste navegador.</span>`;
+        document.getElementById("searchInput").value="";
+        renderAll();
+        showToast(`${imported.length.toLocaleString("pt-BR")} licitações importadas.`);
+        setPage("inicio")
+      }catch(error){showToast(error.message||"Não foi possível importar esse arquivo.")}
+      finally{document.getElementById("zipInput").value=""}
+    }
+    async function clearExamples(){
+      const hadExamples=tenders.some(tender=>tender.id.startsWith("demo-"));
+      if(!hadExamples){showToast("Não há exemplos iniciais para remover.");return}
+      tenders=tenders.filter(tender=>!tender.id.startsWith("demo-"));
+      if(db)await writeTenders(db,tenders);
+      renderAll();
+      showToast("Os registros iniciais foram removidos.");
+      document.getElementById("sourceNote").innerHTML=`<span class="note-icon" aria-hidden="true">ⓘ</span><span><strong>Base sem os registros iniciais.</strong> Importe o ZIP completo para preencher o mostruário com sua base.</span>`
+    }
+    function registerManualUser(event){
+      event.preventDefault();
+      const name=document.getElementById("manualUserName").value.trim();
+      const cnpj=document.getElementById("manualUserCnpj").value.trim();
+      if(!name){showToast("Informe o nome do usuário.");return}
+      const key=profileUserKey({name,cnpj});
+      if(!key){showToast("Informe o nome ou o CNPJ do usuário.");return}
+      const users=getUsers();
+      const existing=users.find(user=>user.key===key);
+      if(existing){selectedAdminUserKey=existing.key;showToast("Esse usuário já estava cadastrado.");}
+      else{
+        users.push({key,name,company:"",cnpj,email:""});
+        if(!safeWrite(STORAGE_KEYS.users,users))return;
+        selectedAdminUserKey=key;
+        showToast("Usuário cadastrado na lista local.")
+      }
+      document.getElementById("manualUserForm").reset();
+      renderAll()
+    }
+    document.addEventListener("click",event=>{
+      const nav=event.target.closest("[data-page]");
+      if(nav){setPage(nav.dataset.page);return}
+      const pageLink=event.target.closest("[data-page-link]");
+      if(pageLink){event.preventDefault();setPage(pageLink.dataset.pageLink);return}
+      const filter=event.target.closest("[data-filter]");
+      if(filter){
+        activeRequestFilter=filter.dataset.filter;
+        document.querySelectorAll(".filter-tab").forEach(button=>button.classList.toggle("active",button===filter));
+        renderRequests();
+        return
+      }
+      const action=event.target.closest("[data-action]");
+      if(!action)return;
+      const id=action.dataset.id;
+      if(action.dataset.action==="toggle-favorite")toggleFavorite(id);
+      else if(action.dataset.action==="open-detail")openDetail(id);
+      else if(action.dataset.action==="set-status")setTenderStatus(action.dataset.status);
+      else if(action.dataset.action==="remove-status")removeTenderStatus();
+      else if(action.dataset.action==="save-note")saveTenderNote();
+      else if(action.dataset.action==="select-admin-user"){selectedAdminUserKey=action.dataset.key;renderAll()}
+      else if(action.dataset.action==="assign-acquired")assignAcquired(id);
+      else if(action.dataset.action==="remove-acquired")removeAcquired(id)
+    });
+    document.getElementById("loginForm").addEventListener("submit",loginAccountApi);
+    document.getElementById("registerForm").addEventListener("submit",registerAccountApi);
+    ["registerCnpj","companyCnpj","loginCnpj","manualUserCnpj"].forEach(id=>{const input=document.getElementById(id);if(input)applyMask(input,formatCnpj)});
+    ["registerPhone","profilePhone"].forEach(id=>{const input=document.getElementById(id);if(input)applyMask(input,formatPhone)});
+    document.getElementById("logoutBtn").addEventListener("click",signOut);
+    document.addEventListener("click",event=>{const mode=event.target.closest("[data-auth-mode]");if(mode)authMode(mode.dataset.authMode)});
+    document.getElementById("searchInput").addEventListener("input",renderHome);
+    document.getElementById("requestSearch").addEventListener("input",renderRequests);
+    document.getElementById("profileForm").addEventListener("submit",profileSubmit);
+    document.getElementById("saveAlerts").addEventListener("click",saveAlerts);
+    document.getElementById("clearExamples").addEventListener("click",clearExamples);
+    document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("zipInput").click());
+    document.getElementById("zipInput").addEventListener("change",event=>importFile(event.target.files?.[0]));
+    document.getElementById("closeModal").addEventListener("click",closeDetail);
+    document.getElementById("detailBackdrop").addEventListener("click",event=>{if(event.target.id==="detailBackdrop")closeDetail()});
+    document.getElementById("adminUserSearch").addEventListener("input",renderRequests);
+    document.getElementById("adminTenderSearch").addEventListener("input",renderRequests);
+    document.getElementById("manualUserForm").addEventListener("submit",registerManualUser);
+    document.addEventListener("keydown",event=>{if(event.key==="Escape")closeDetail()});
+
+    async function loadMunicipalities(){
+      const datalist=document.getElementById("citySuggestions");
+      if(!datalist)return;
+      const cacheKey="licitae_brazil_municipalities_v1";
+      const inputs=["registerCity","profileCity"].map(id=>document.getElementById(id)).filter(Boolean);
+      let municipalities=[];
+      const renderSuggestions=input=>{
+        const query=normalize(input.value.split("/")[0]);
+        const matches=query
+          ?municipalities.filter(city=>normalize(city.nome).includes(query)).slice(0,100)
+          :municipalities;
+        const fragment=document.createDocumentFragment();
+        matches.forEach(city=>{
+          const option=document.createElement("option");
+          option.value=`${city.nome}/${city.uf}`;
+          fragment.appendChild(option)
+        });
+        datalist.replaceChildren(fragment)
+      };
+      inputs.forEach(input=>{
+        input.addEventListener("input",()=>renderSuggestions(input));
+        input.addEventListener("focus",()=>renderSuggestions(input));
+        input.addEventListener("blur",()=>{
+          const parts=input.value.split("/");
+          const cityQuery=normalize(parts[0]);
+          const ufQuery=normalize(parts[1]||"");
+          const matches=municipalities.filter(city=>
+            normalize(city.nome)===cityQuery&&(!ufQuery||normalize(city.uf)===ufQuery)
+          );
+          if(matches.length===1)input.value=`${matches[0].nome}/${matches[0].uf}`
+        })
+      });
+      const cached=safeRead(cacheKey,null);
+      if(Array.isArray(cached)&&cached.length>5000){
+        municipalities=cached;
+        renderSuggestions(inputs[0]||{value:""})
+      }
+      try{
+        const response=await fetch("https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=nome");
+        if(!response.ok)throw new Error("Falha ao consultar a lista de municípios.");
+        const data=await response.json();
+        const rows=data.map(item=>({
+          nome:item.nome,
+          uf:item.microrregiao?.mesorregiao?.UF?.sigla||item["regiao-imediata"]?.["regiao-intermediaria"]?.UF?.sigla
+        })).filter(item=>item.nome&&item.uf);
+        if(rows.length<5000)throw new Error("A lista recebida está incompleta.");
+        rows.sort((a,b)=>a.nome.localeCompare(b.nome,"pt-BR"));
+        municipalities=rows;
+        renderSuggestions(inputs[0]||{value:""});
+        safeWrite(cacheKey,rows)
+      }catch(error){
+        if(!Array.isArray(cached)||cached.length<=5000){
+          showToast("Não foi possível carregar a lista completa de cidades. Verifique a conexão com a internet.")
+        }
+      }
+    }
+
+    async function initialize(){
+      loadMunicipalities();
+      updateProfileChip();
+      const existingProfile=safeRead(STORAGE_KEYS.profile,{});
+      if(existingProfile.name||existingProfile.company||existingProfile.cnpj)upsertDirectoryUser(existingProfile);
+      try{
+        db=await openDatabase();
+        const stored=await loadStoredTenders(db);
+        if(stored&&stored.length){
+          tenders=stored;
+          document.getElementById("sourceNote").innerHTML=`<span class="note-icon" aria-hidden="true">✓</span><span><strong>Base carregada:</strong> ${stored.length.toLocaleString("pt-BR")} licitações salvas neste navegador.</span>`
+        }else{
+          tenders=INITIAL_TENDERS.slice();
+          if(db)await writeTenders(db,tenders)
+        }
+      }catch(error){tenders=INITIAL_TENDERS.slice()}
+      renderAll();
+      loadProfile();
+      try{
+        const session=safeRead(STORAGE_KEYS.session,null);
+        if(session?.token){
+          apiToken=session.token;
+          const me=await api("/api/me");
+          await activateSession(me.user,session.token);
+          return
+        }
+      }catch(error){}
+      document.getElementById("appShell").hidden=true;
+      document.getElementById("authScreen").hidden=false
+    }
+    initialize();
+  </script>
+</body>
+</html>
